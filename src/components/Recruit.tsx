@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { useScrollReveal, useStaggerAnimation } from "@/hooks/useScrollAnimation";
 
 type Position = {
   title: string;
@@ -21,31 +21,15 @@ type RecruitProps = {
 };
 
 export default function Recruit({ label, title, description, positions, cta }: RecruitProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current?.querySelectorAll(".fade-in-up, .stagger");
-    elements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  const { ref: headerRef, className: headerClass } = useScrollReveal<HTMLDivElement>("fade-up");
+  const { containerRef, isVisible } = useStaggerAnimation<HTMLDivElement>();
+  const { ref: ctaRef, className: ctaClass } = useScrollReveal<HTMLDivElement>("fade-up");
 
   return (
-    <section id="recruit" ref={sectionRef} className="py-24 md:py-32 bg-white">
+    <section id="recruit" className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16 fade-in-up">
+        <div ref={headerRef} className={`text-center mb-16 ${headerClass}`}>
           <span className="text-sm font-bold tracking-[0.3em] text-gray-400 block mb-4">
             {label}
           </span>
@@ -56,12 +40,17 @@ export default function Recruit({ label, title, description, positions, cta }: R
         </div>
 
         {/* Positions */}
-        <div className="stagger grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div
+          ref={containerRef}
+          className={`stagger-container grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 ${
+            isVisible ? "is-visible" : ""
+          }`}
+        >
           {positions.map((position, index) => (
             <Link
               key={index}
               href={position.href}
-              className="group block p-8 bg-gray-50 rounded-lg hover:bg-black hover:text-white transition-all duration-300"
+              className={`stagger-item stagger-delay-${index} group block p-8 bg-gray-50 rounded-lg hover:bg-black hover:text-white transition-all duration-300 card-lift`}
             >
               <h3 className="text-lg font-bold mb-2 group-hover:text-white transition-colors">
                 {position.title}
@@ -90,12 +79,25 @@ export default function Recruit({ label, title, description, positions, cta }: R
         </div>
 
         {/* CTA */}
-        <div className="text-center fade-in-up">
+        <div ref={ctaRef} className={`text-center ${ctaClass}`}>
           <Link
             href={cta.href}
-            className="inline-block px-12 py-4 text-sm font-bold tracking-widest bg-black text-white hover:bg-gray-800 transition-colors"
+            className="btn-lift inline-flex items-center gap-2 px-12 py-4 text-sm font-bold tracking-widest bg-black text-white hover:bg-gray-800 transition-colors"
           >
             {cta.label}
+            <svg
+              className="btn-arrow w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </Link>
         </div>
       </div>

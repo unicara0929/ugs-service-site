@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useStaggerAnimation } from "@/hooks/useScrollAnimation";
 
 type Member = {
   id: string;
@@ -21,29 +21,7 @@ type StoriesProps = {
 };
 
 export default function Stories({ label, title, description, members }: StoriesProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-
-  // IntersectionObserver でスクロール検知
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            entry.target.classList.add("is-visible");
-            setHasAnimated(true);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [hasAnimated]);
+  const { containerRef, isVisible } = useStaggerAnimation<HTMLElement>();
 
   // 表示するメンバー（最大3人）
   const displayMembers = members.slice(0, 3);
@@ -51,37 +29,39 @@ export default function Stories({ label, title, description, members }: StoriesP
   return (
     <section
       id="stories"
-      ref={sectionRef}
-      className="py-24 md:py-32 bg-white overflow-hidden stagger-container"
+      ref={containerRef}
+      className={`py-24 md:py-32 bg-white overflow-hidden stagger-container ${
+        isVisible ? "is-visible" : ""
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           {/* Left Column: Text Content */}
           <div className="lg:col-span-4 flex flex-col justify-center">
-            {/* Label - delay: 0 */}
+            {/* Label */}
             <span className="stagger-item stagger-delay-0 text-sm font-bold tracking-[0.3em] text-gray-400 block mb-4">
               {label}
             </span>
 
-            {/* Title - delay: 1 */}
+            {/* Title */}
             <h2 className="stagger-item stagger-delay-1 text-3xl md:text-4xl lg:text-5xl font-black mb-6">
               {title}
             </h2>
 
-            {/* Description - delay: 2 */}
+            {/* Description */}
             <p className="stagger-item stagger-delay-2 text-gray-600 leading-relaxed mb-8">
               {description}
             </p>
 
-            {/* Button - delay: 3 */}
+            {/* Button */}
             <div className="stagger-item stagger-delay-3">
               <Link
                 href="/stories"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-black text-white text-sm font-medium tracking-wider hover:bg-gray-800 transition-colors"
+                className="btn-lift inline-flex items-center gap-2 px-8 py-3 bg-black text-white text-sm font-medium tracking-wider hover:bg-gray-800 transition-colors"
               >
                 VIEW ALL
                 <svg
-                  className="w-4 h-4"
+                  className="btn-arrow w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -106,7 +86,7 @@ export default function Stories({ label, title, description, members }: StoriesP
                   href={`/story/${member.id}`}
                   className={`stagger-item stagger-delay-${index + 4} block group`}
                 >
-                  <div className="card-hover bg-white rounded-lg overflow-hidden shadow-lg">
+                  <div className="card-lift bg-white rounded-lg overflow-hidden shadow-lg">
                     {/* Image */}
                     <div className="relative aspect-[3/4] img-zoom">
                       <Image

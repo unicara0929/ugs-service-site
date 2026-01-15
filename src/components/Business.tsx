@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { useScrollReveal, useStaggerAnimation } from "@/hooks/useScrollAnimation";
 
 type Service = {
   id: string;
@@ -18,31 +18,13 @@ type BusinessProps = {
 };
 
 export default function Business({ label, title, description, services }: BusinessProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current?.querySelectorAll(".fade-in-up, .slide-in-left, .slide-in-right");
-    elements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  const { ref: headerRef, className: headerClass } = useScrollReveal<HTMLDivElement>("fade-up");
 
   return (
-    <section id="business" ref={sectionRef} className="py-24 md:py-32 bg-gray-50">
+    <section id="business" className="py-24 md:py-32 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16 fade-in-up">
+        <div ref={headerRef} className={`text-center mb-16 ${headerClass}`}>
           <span className="text-sm font-bold tracking-[0.3em] text-gray-400 block mb-4">
             {label}
           </span>
@@ -55,42 +37,59 @@ export default function Business({ label, title, description, services }: Busine
         {/* Services */}
         <div className="space-y-16 md:space-y-24">
           {services.map((service, index) => (
-            <div
-              key={service.id}
-              className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center ${
-                index % 2 === 1 ? "lg:flex-row-reverse" : ""
-              }`}
-            >
-              {/* Image */}
-              <div className={index % 2 === 0 ? "slide-in-left" : "slide-in-right lg:order-2"}>
-                <div className="relative aspect-[3/2] img-zoom rounded-lg overflow-hidden shadow-xl">
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className={index % 2 === 0 ? "slide-in-right" : "slide-in-left lg:order-1"}>
-                <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-6xl md:text-7xl font-black text-gray-200">
-                    {service.id}
-                  </span>
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                  {service.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {service.description}
-                </p>
-              </div>
-            </div>
+            <ServiceItem key={service.id} service={service} index={index} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function ServiceItem({ service, index }: { service: Service; index: number }) {
+  const isEven = index % 2 === 0;
+  const { ref: imageRef, className: imageClass } = useScrollReveal<HTMLDivElement>(
+    isEven ? "slide-left" : "slide-right"
+  );
+  const { ref: contentRef, className: contentClass } = useScrollReveal<HTMLDivElement>(
+    isEven ? "slide-right" : "slide-left"
+  );
+
+  return (
+    <div
+      className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center`}
+    >
+      {/* Image */}
+      <div
+        ref={imageRef}
+        className={`${imageClass} ${!isEven ? "lg:order-2" : ""}`}
+      >
+        <div className="relative aspect-[3/2] img-zoom rounded-lg overflow-hidden shadow-xl">
+          <Image
+            src={service.image}
+            alt={service.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div
+        ref={contentRef}
+        className={`${contentClass} ${!isEven ? "lg:order-1" : ""}`}
+      >
+        <div className="flex items-baseline gap-4 mb-4">
+          <span className="text-6xl md:text-7xl font-black text-gray-200">
+            {service.id}
+          </span>
+        </div>
+        <h3 className="text-2xl md:text-3xl font-bold mb-4">
+          {service.title}
+        </h3>
+        <p className="text-gray-600 leading-relaxed">
+          {service.description}
+        </p>
+      </div>
+    </div>
   );
 }

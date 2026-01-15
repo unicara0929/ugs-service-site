@@ -215,31 +215,31 @@ h1, h2, h3, h4, h5, h6 {
    =========================================== */
 
 :root {
-  /* Duration */
-  --hero-duration-bg: 1200ms;
-  --hero-duration-shape: 1000ms;
-  --hero-duration-main: 900ms;
-  --hero-duration-sub: 800ms;
-  --hero-duration-cta: 700ms;
-  --hero-duration-scroll: 600ms;
+  /* Duration - 全体で約1.8秒 */
+  --hero-duration-bg: 1000ms;
+  --hero-duration-shape: 800ms;
+  --hero-duration-main: 700ms;
+  --hero-duration-sub: 600ms;
+  --hero-duration-cta: 500ms;
+  --hero-duration-scroll: 500ms;
 
-  /* Delay */
+  /* Delay - 表示順序: 背景→メイン→サブ→CTA→装飾→スクロール */
   --hero-delay-bg: 0ms;
-  --hero-delay-shape: 100ms;
-  --hero-delay-main: 200ms;
-  --hero-delay-sub: 350ms;
-  --hero-delay-cta: 550ms;
-  --hero-delay-scroll: 1400ms;
+  --hero-delay-main: 100ms;
+  --hero-delay-sub: 400ms;
+  --hero-delay-cta: 650ms;
+  --hero-delay-shape: 300ms;
+  --hero-delay-scroll: 1200ms;
 
   /* Easing */
   --hero-easing: cubic-bezier(0.22, 1, 0.36, 1);
   --hero-easing-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   /* Distance */
-  --hero-distance-main: 50px;
-  --hero-distance-sub: 35px;
-  --hero-distance-cta: 25px;
-  --hero-scale-shape: 0.85;
+  --hero-distance-main: 40px;
+  --hero-distance-sub: 30px;
+  --hero-distance-cta: 20px;
+  --hero-scale-shape: 0.9;
 }
 
 /* ----------------------------------------
@@ -483,58 +483,307 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===========================================
-   Scroll Stagger Animation
+   Scroll Animation System
+   GA Technologies 新卒採用サイト準拠
 
-   スクロールでviewportに入った時に
-   階段式（stagger）で順番に表示
-
-   調整方法:
-   - --stagger-duration: アニメーション時間
-   - --stagger-distance: スライド距離
-   - --stagger-delay: 各要素間の遅延
+   調整ポイント（src/hooks/useScrollAnimation.ts と連動）:
+   - --scroll-duration: アニメーション時間
+   - --scroll-distance: 移動距離
+   - --scroll-stagger: 階段式の間隔（0.08秒 = 80ms）
+   - --scroll-easing: イージング
    =========================================== */
 
 :root {
-  --stagger-duration: 600ms;
-  --stagger-distance: 25px;
-  --stagger-delay: 100ms;
-  --stagger-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* easeOutQuad */
+  /* スクロールアニメーション基本設定 */
+  --scroll-duration: 600ms;
+  --scroll-distance: 30px;
+  --scroll-stagger: 80ms;
+  --scroll-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* スライド系 */
+  --scroll-slide-distance: 60px;
 }
 
-/* スクロールトリガー用アニメーション */
-@keyframes staggerFadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(var(--stagger-distance));
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ========================================
+   個別要素のスクロールアニメーション
+   ======================================== */
+
+/* フェードアップ（デフォルト） */
+.scroll-fade-up {
+  opacity: 0;
+  transform: translateY(var(--scroll-distance));
+  transition:
+    opacity var(--scroll-duration) var(--scroll-easing),
+    transform var(--scroll-duration) var(--scroll-easing);
 }
 
-/* 初期状態（非表示） */
+.scroll-fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* フェードイン */
+.scroll-fade-in {
+  opacity: 0;
+  transition: opacity var(--scroll-duration) var(--scroll-easing);
+}
+
+.scroll-fade-in.is-visible {
+  opacity: 1;
+}
+
+/* 左からスライド */
+.scroll-slide-left {
+  opacity: 0;
+  transform: translateX(calc(var(--scroll-slide-distance) * -1));
+  transition:
+    opacity var(--scroll-duration) var(--scroll-easing),
+    transform var(--scroll-duration) var(--scroll-easing);
+}
+
+.scroll-slide-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 右からスライド */
+.scroll-slide-right {
+  opacity: 0;
+  transform: translateX(var(--scroll-slide-distance));
+  transition:
+    opacity var(--scroll-duration) var(--scroll-easing),
+    transform var(--scroll-duration) var(--scroll-easing);
+}
+
+.scroll-slide-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* スケールイン */
+.scroll-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity var(--scroll-duration) var(--scroll-easing),
+    transform var(--scroll-duration) var(--scroll-easing);
+}
+
+.scroll-scale.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ========================================
+   階段式アニメーション（Stagger）
+   ======================================== */
+
+/* 階段式アイテム（useStaggerAnimation用） */
+.scroll-animate-item {
+  opacity: 0;
+  transform: translateY(var(--scroll-distance));
+  transition:
+    opacity var(--scroll-duration) var(--scroll-easing),
+    transform var(--scroll-duration) var(--scroll-easing);
+}
+
+.scroll-animate-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 従来のstagger-item互換（CSS制御版） */
 .stagger-item {
   opacity: 0;
-  transform: translateY(var(--stagger-distance));
+  transform: translateY(var(--scroll-distance));
+  transition:
+    opacity var(--scroll-duration) var(--scroll-easing),
+    transform var(--scroll-duration) var(--scroll-easing);
 }
 
-/* 表示状態（.is-visible が付与されたら発火） */
 .stagger-container.is-visible .stagger-item {
-  animation: staggerFadeUp var(--stagger-duration) var(--stagger-easing) forwards;
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* 遅延クラス（0〜9） */
-.stagger-container.is-visible .stagger-item.stagger-delay-0 { animation-delay: 0ms; }
-.stagger-container.is-visible .stagger-item.stagger-delay-1 { animation-delay: calc(var(--stagger-delay) * 1); }
-.stagger-container.is-visible .stagger-item.stagger-delay-2 { animation-delay: calc(var(--stagger-delay) * 2); }
-.stagger-container.is-visible .stagger-item.stagger-delay-3 { animation-delay: calc(var(--stagger-delay) * 3); }
-.stagger-container.is-visible .stagger-item.stagger-delay-4 { animation-delay: calc(var(--stagger-delay) * 4); }
-.stagger-container.is-visible .stagger-item.stagger-delay-5 { animation-delay: calc(var(--stagger-delay) * 5); }
-.stagger-container.is-visible .stagger-item.stagger-delay-6 { animation-delay: calc(var(--stagger-delay) * 6); }
-.stagger-container.is-visible .stagger-item.stagger-delay-7 { animation-delay: calc(var(--stagger-delay) * 7); }
-.stagger-container.is-visible .stagger-item.stagger-delay-8 { animation-delay: calc(var(--stagger-delay) * 8); }
-.stagger-container.is-visible .stagger-item.stagger-delay-9 { animation-delay: calc(var(--stagger-delay) * 9); }
+/* 遅延クラス（0〜14、80ms間隔） */
+.stagger-container.is-visible .stagger-item.stagger-delay-0 { transition-delay: 0ms; }
+.stagger-container.is-visible .stagger-item.stagger-delay-1 { transition-delay: calc(var(--scroll-stagger) * 1); }
+.stagger-container.is-visible .stagger-item.stagger-delay-2 { transition-delay: calc(var(--scroll-stagger) * 2); }
+.stagger-container.is-visible .stagger-item.stagger-delay-3 { transition-delay: calc(var(--scroll-stagger) * 3); }
+.stagger-container.is-visible .stagger-item.stagger-delay-4 { transition-delay: calc(var(--scroll-stagger) * 4); }
+.stagger-container.is-visible .stagger-item.stagger-delay-5 { transition-delay: calc(var(--scroll-stagger) * 5); }
+.stagger-container.is-visible .stagger-item.stagger-delay-6 { transition-delay: calc(var(--scroll-stagger) * 6); }
+.stagger-container.is-visible .stagger-item.stagger-delay-7 { transition-delay: calc(var(--scroll-stagger) * 7); }
+.stagger-container.is-visible .stagger-item.stagger-delay-8 { transition-delay: calc(var(--scroll-stagger) * 8); }
+.stagger-container.is-visible .stagger-item.stagger-delay-9 { transition-delay: calc(var(--scroll-stagger) * 9); }
+.stagger-container.is-visible .stagger-item.stagger-delay-10 { transition-delay: calc(var(--scroll-stagger) * 10); }
+.stagger-container.is-visible .stagger-item.stagger-delay-11 { transition-delay: calc(var(--scroll-stagger) * 11); }
+.stagger-container.is-visible .stagger-item.stagger-delay-12 { transition-delay: calc(var(--scroll-stagger) * 12); }
+
+/* ========================================
+   ホバーエフェクト
+   GA Technologies準拠 - 上品で気持ちよく
+   ======================================== */
+
+/* ボタン: 浮く + 矢印が動く */
+.btn-lift {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition:
+    transform 0.3s var(--scroll-easing),
+    box-shadow 0.3s var(--scroll-easing);
+}
+
+.btn-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-lift .btn-arrow {
+  transition: transform 0.3s var(--scroll-easing);
+}
+
+.btn-lift:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* カード: 拡大 + 影強化 */
+.card-lift {
+  transition:
+    transform 0.4s var(--scroll-easing),
+    box-shadow 0.4s var(--scroll-easing);
+}
+
+.card-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* 既存の card-hover を強化 */
+.card-hover {
+  transition:
+    transform 0.4s var(--scroll-easing),
+    box-shadow 0.4s var(--scroll-easing);
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 画像ズーム強化 */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img,
+.img-zoom > div {
+  transition: transform 0.6s var(--scroll-easing);
+}
+
+.img-zoom:hover img,
+.img-zoom:hover > div {
+  transform: scale(1.08);
+}
+
+/* リンク矢印アニメーション */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.link-arrow svg,
+.link-arrow .arrow {
+  transition: transform 0.3s var(--scroll-easing);
+}
+
+.link-arrow:hover svg,
+.link-arrow:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* ========================================
+   セクションヘッダー共通スタイル
+   ======================================== */
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: clamp(1.875rem, 5vw, 3rem);
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.section-description {
+  color: #6b7280;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ========================================
+   reduced-motion 対応
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-fade-up,
+  .scroll-fade-in,
+  .scroll-slide-left,
+  .scroll-slide-right,
+  .scroll-scale,
+  .scroll-animate-item,
+  .stagger-item {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .btn-lift,
+  .card-lift,
+  .card-hover,
+  .img-zoom img,
+  .img-zoom > div,
+  .link-arrow svg {
+    transition: none;
+  }
+}
+
+/* ========================================
+   スマホ最適化（軽量化）
+   ======================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --scroll-distance: 20px;
+    --scroll-slide-distance: 40px;
+    --scroll-duration: 500ms;
+  }
+
+  .card-hover:hover,
+  .card-lift:hover {
+    transform: translateY(-4px);
+  }
+}
 
 /* Hamburger menu */
 .hamburger-line {

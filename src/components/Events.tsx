@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useScrollReveal, useStaggerAnimation } from "@/hooks/useScrollAnimation";
 
 type Event = {
   id: string;
@@ -20,31 +20,14 @@ type EventsProps = {
 };
 
 export default function Events({ label, title, description, list }: EventsProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current?.querySelectorAll(".fade-in-up, .stagger");
-    elements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  const { ref: headerRef, className: headerClass } = useScrollReveal<HTMLDivElement>("fade-up");
+  const { containerRef, isVisible } = useStaggerAnimation<HTMLDivElement>();
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 bg-black text-white">
+    <section className="py-24 md:py-32 bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16 fade-in-up">
+        <div ref={headerRef} className={`text-center mb-16 ${headerClass}`}>
           <span className="text-sm font-bold tracking-[0.3em] text-gray-400 block mb-4">
             {label}
           </span>
@@ -55,10 +38,19 @@ export default function Events({ label, title, description, list }: EventsProps)
         </div>
 
         {/* Events Grid */}
-        <div className="stagger grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {list.map((event) => (
-            <Link key={event.id} href="#" className="group block">
-              <div className="card-hover bg-gray-900 rounded-lg overflow-hidden">
+        <div
+          ref={containerRef}
+          className={`stagger-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ${
+            isVisible ? "is-visible" : ""
+          }`}
+        >
+          {list.map((event, index) => (
+            <Link
+              key={event.id}
+              href="#"
+              className={`stagger-item stagger-delay-${index} group block`}
+            >
+              <div className="card-lift bg-gray-900 rounded-lg overflow-hidden">
                 <div className="relative aspect-video img-zoom">
                   <Image
                     src={event.image}

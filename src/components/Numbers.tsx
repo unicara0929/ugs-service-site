@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useStaggerAnimation, useScrollReveal } from "@/hooks/useScrollAnimation";
 
 type NumberItem = {
   value: string;
@@ -75,31 +76,14 @@ function AnimatedNumber({ value, unit }: { value: string; unit: string }) {
 }
 
 export default function Numbers({ label, title, items }: NumbersProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current?.querySelectorAll(".fade-in-up, .stagger");
-    elements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  const { ref: headerRef, className: headerClass } = useScrollReveal<HTMLDivElement>("fade-up");
+  const { containerRef, isVisible } = useStaggerAnimation<HTMLDivElement>();
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 bg-gray-50">
+    <section className="py-24 md:py-32 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16 fade-in-up">
+        <div ref={headerRef} className={`text-center mb-16 ${headerClass}`}>
           <span className="text-sm font-bold tracking-[0.3em] text-gray-400 block mb-4">
             {label}
           </span>
@@ -109,11 +93,16 @@ export default function Numbers({ label, title, items }: NumbersProps) {
         </div>
 
         {/* Numbers Grid */}
-        <div className="stagger grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
+        <div
+          ref={containerRef}
+          className={`stagger-container grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 ${
+            isVisible ? "is-visible" : ""
+          }`}
+        >
           {items.map((item, index) => (
             <div
               key={index}
-              className="text-center p-8 bg-white rounded-lg shadow-sm"
+              className={`stagger-item stagger-delay-${index} text-center p-8 bg-white rounded-lg shadow-sm card-lift`}
             >
               <div className="text-4xl md:text-5xl lg:text-6xl font-black mb-2">
                 <AnimatedNumber value={item.value} unit={item.unit} />
