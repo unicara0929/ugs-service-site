@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "title": "UGS株式会社 新卒採用サイト",
+    "description": "UGS株式会社の新卒採用情報。私たちと一緒に、未来を創造しませんか。"
+  },
+  "header": {
+    "logo": "UGS",
+    "nav": [
+      { "label": "TOP", "href": "/" },
+      { "label": "UGSについて", "href": "#about" },
+      { "label": "メンバーストーリー", "href": "#stories" },
+      { "label": "募集要項", "href": "#recruit" }
+    ]
+  },
+  "hero": {
+    "catchCopy": "CREATE\nTHE FUTURE",
+    "subCopy": "テクノロジーで、社会の当たり前を変えていく。",
+    "cta": {
+      "label": "エントリーはこちら",
+      "href": "#recruit"
+    },
+    "scrollText": "SCROLL"
+  },
+  "about": {
+    "label": "ABOUT",
+    "title": "UGSについて",
+    "description": "UGSは「テクノロジーで社会課題を解決する」をミッションに掲げ、\n2015年の創業以来、急成長を続けています。\n私たちは既存の枠組みにとらわれず、新しい価値を創造し続けます。",
+    "points": [
+      {
+        "title": "ミッション",
+        "description": "テクノロジーの力で、社会の「不」を解消し、より良い未来を創造する。"
+      },
+      {
+        "title": "ビジョン",
+        "description": "2030年までにアジアNo.1のテックカンパニーへ。"
+      },
+      {
+        "title": "バリュー",
+        "description": "挑戦・革新・誠実。この3つの価値観が私たちの行動指針です。"
+      }
+    ]
+  },
+  "numbers": {
+    "label": "NUMBERS",
+    "title": "数字で見るUGS",
+    "items": [
+      { "value": "2015", "unit": "年", "label": "創業" },
+      { "value": "500", "unit": "名+", "label": "社員数" },
+      { "value": "150", "unit": "億円", "label": "売上高" },
+      { "value": "32", "unit": "歳", "label": "平均年齢" },
+      { "value": "45", "unit": "%", "label": "女性比率" },
+      { "value": "98", "unit": "%", "label": "リモートワーク率" }
+    ]
+  },
+  "stories": {
+    "label": "MEMBERS STORY",
+    "title": "メンバーストーリー",
+    "description": "UGSで働く先輩社員たちのリアルな声をお届けします。",
+    "members": [
+      {
+        "id": "01",
+        "name": "山田 太郎",
+        "role": "ソフトウェアエンジニア",
+        "year": "2022年入社",
+        "summary": "裁量の大きさと成長環境が魅力。入社1年目からプロダクトの核心部分を任されています。",
+        "image": "/images/member-01.jpg"
+      },
+      {
+        "id": "02",
+        "name": "佐藤 花子",
+        "role": "プロダクトマネージャー",
+        "year": "2021年入社",
+        "summary": "ユーザーの声を形にする仕事。チーム全体で課題解決に向き合う文化があります。",
+        "image": "/images/member-02.jpg"
+      },
+      {
+        "id": "03",
+        "name": "鈴木 一郎",
+        "role": "ビジネス開発",
+        "year": "2023年入社",
+        "summary": "新規事業の立ち上げに携わっています。スピード感と挑戦を楽しめる環境です。",
+        "image": "/images/member-03.jpg"
+      },
+      {
+        "id": "04",
+        "name": "田中 美咲",
+        "role": "デザイナー",
+        "year": "2022年入社",
+        "summary": "デザインの力でプロダクトの価値を最大化。エンジニアとの距離が近いのが特徴です。",
+        "image": "/images/member-04.jpg"
+      },
+      {
+        "id": "05",
+        "name": "伊藤 健太",
+        "role": "データサイエンティスト",
+        "year": "2021年入社",
+        "summary": "データドリブンな意思決定を支援。最新技術を積極的に取り入れる文化があります。",
+        "image": "/images/member-05.jpg"
+      },
+      {
+        "id": "06",
+        "name": "渡辺 さくら",
+        "role": "カスタマーサクセス",
+        "year": "2023年入社",
+        "summary": "お客様の成功が私たちの成功。日々の感謝の言葉がモチベーションになっています。",
+        "image": "/images/member-06.jpg"
+      }
+    ]
+  },
+  "business": {
+    "label": "BUSINESS",
+    "title": "事業紹介",
+    "description": "UGSは複数の事業領域で社会課題の解決に取り組んでいます。",
+    "services": [
+      {
+        "id": "01",
+        "title": "DXプラットフォーム事業",
+        "description": "企業のデジタルトランスフォーメーションを支援するSaaSプラットフォームを提供。業務効率化と生産性向上を実現します。",
+        "image": "/images/business-01.jpg"
+      },
+      {
+        "id": "02",
+        "title": "AIソリューション事業",
+        "description": "最先端のAI技術を活用したソリューションを開発。自然言語処理や画像認識など、幅広い領域で価値を提供します。",
+        "image": "/images/business-02.jpg"
+      },
+      {
+        "id": "03",
+        "title": "HRテック事業",
+        "description": "採用から育成まで、人材領域の課題を解決するプロダクトを展開。企業と人の最適なマッチングを実現します。",
+        "image": "/images/business-03.jpg"
+      }
+    ]
+  },
+  "events": {
+    "label": "EVENTS",
+    "title": "採用イベント",
+    "description": "UGSの魅力を体感できるイベントを開催中です。",
+    "list": [
+      {
+        "id": "01",
+        "title": "TECH SUMMIT 2026",
+        "date": "2026年2月開催予定",
+        "description": "エンジニア向けの技術カンファレンス。最先端の技術トレンドと実践的なナレッジを共有します。",
+        "image": "/images/event-01.jpg"
+      },
+      {
+        "id": "02",
+        "title": "BUSINESS CHALLENGE",
+        "date": "2026年3月開催予定",
+        "description": "ビジネス職向けのケーススタディワークショップ。実際の事業課題に取り組みます。",
+        "image": "/images/event-02.jpg"
+      },
+      {
+        "id": "03",
+        "title": "OPEN OFFICE DAY",
+        "date": "毎月開催",
+        "description": "オフィス見学会。実際の職場環境や社員との交流を通じて、UGSの雰囲気を体感できます。",
+        "image": "/images/event-03.jpg"
+      }
+    ]
+  },
+  "recruit": {
+    "label": "RECRUIT",
+    "title": "募集要項",
+    "description": "2027年卒向けの採用を実施中です。",
+    "positions": [
+      {
+        "title": "ソフトウェアエンジニア職",
+        "description": "プロダクト開発の中核を担うエンジニアを募集",
+        "href": "#"
+      },
+      {
+        "title": "ビジネス総合職",
+        "description": "事業成長を牽引するビジネスパーソンを募集",
+        "href": "#"
+      },
+      {
+        "title": "デザイナー職",
+        "description": "ユーザー体験を設計するデザイナーを募集",
+        "href": "#"
+      }
+    ],
+    "cta": {
+      "label": "エントリーする",
+      "href": "#"
+    }
+  },
+  "footer": {
+    "nav": [
+      { "label": "会社概要", "href": "#" },
+      { "label": "プライバシーポリシー", "href": "#" },
+      { "label": "お問い合わせ", "href": "#" }
+    ],
+    "social": [
+      { "label": "X", "href": "#", "icon": "x" },
+      { "label": "Facebook", "href": "#", "icon": "facebook" },
+      { "label": "LINE", "href": "#", "icon": "line" }
+    ],
+    "copyright": "© 2026 UGS Inc. All Rights Reserved."
+  }
+}
