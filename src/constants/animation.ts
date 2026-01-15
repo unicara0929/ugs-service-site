@@ -91,7 +91,7 @@ export const HERO_ANIMATION_CONFIG = {
   /** アニメーションを有効にするか */
   ENABLED: true,
   /** 初回のみ発火（false = 毎回発火） */
-  FIRST_VISIT_ONLY: true,
+  FIRST_VISIT_ONLY: false,
   /** セッションストレージのキー */
   STORAGE_KEY: 'hero-animation-played',
   /** reduced-motion を尊重するか */
