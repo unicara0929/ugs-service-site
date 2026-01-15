@@ -208,35 +208,47 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===========================================
    Hero Initial Load Animation
+   GA Technologies 新卒採用サイト準拠
 
-   調整方法:
-   - --hero-duration: アニメーション時間
-   - --hero-easing: イージング関数
-   - animation-delay: 各要素の遅延（インラインで指定）
+   ※ 定数は src/constants/animation.ts で管理
+   ※ CSS変数はJSから動的に注入
    =========================================== */
 
 :root {
-  --hero-duration: 800ms;
-  --hero-duration-slow: 1000ms;
-  --hero-easing: cubic-bezier(0.22, 1, 0.36, 1); /* easeOutQuint */
-  --hero-slide-distance: 60px;
+  /* Duration */
+  --hero-duration-bg: 1200ms;
+  --hero-duration-shape: 1000ms;
+  --hero-duration-main: 900ms;
+  --hero-duration-sub: 800ms;
+  --hero-duration-cta: 700ms;
+  --hero-duration-scroll: 600ms;
+
+  /* Delay */
+  --hero-delay-bg: 0ms;
+  --hero-delay-shape: 100ms;
+  --hero-delay-main: 200ms;
+  --hero-delay-sub: 350ms;
+  --hero-delay-cta: 550ms;
+  --hero-delay-scroll: 1400ms;
+
+  /* Easing */
+  --hero-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --hero-easing-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Distance */
+  --hero-distance-main: 50px;
+  --hero-distance-sub: 35px;
+  --hero-distance-cta: 25px;
+  --hero-scale-shape: 0.85;
 }
 
-/* 背景フェードイン */
+/* ----------------------------------------
+   Keyframes - 背景
+   ---------------------------------------- */
 @keyframes heroBgFade {
   0% {
     opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-/* 装飾図形: フェードイン + 軽いスケール */
-@keyframes heroShapeReveal {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
+    transform: scale(1.02);
   }
   100% {
     opacity: 1;
@@ -244,11 +256,69 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* テキスト: 下からスライドイン + フェード */
-@keyframes heroSlideUp {
+/* ----------------------------------------
+   Keyframes - 背景オーブ（グロー効果）
+   ---------------------------------------- */
+@keyframes heroOrbReveal {
   0% {
     opacity: 0;
-    transform: translateY(var(--hero-slide-distance));
+    transform: scale(0.6);
+    filter: blur(60px);
+  }
+  50% {
+    opacity: 0.15;
+    filter: blur(50px);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+    filter: blur(40px);
+  }
+}
+
+/* ----------------------------------------
+   Keyframes - 装飾図形
+   ---------------------------------------- */
+@keyframes heroShapeReveal {
+  0% {
+    opacity: 0;
+    transform: scale(var(--hero-scale-shape)) rotate(45deg);
+  }
+  60% {
+    opacity: 0.12;
+  }
+  100% {
+    opacity: 0.1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+/* ----------------------------------------
+   Keyframes - メインコピー（文字単位スプリット対応）
+   ---------------------------------------- */
+@keyframes heroMainReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--hero-distance-main));
+    filter: blur(8px);
+  }
+  40% {
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* ----------------------------------------
+   Keyframes - サブコピー
+   ---------------------------------------- */
+@keyframes heroSubReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--hero-distance-sub));
   }
   100% {
     opacity: 1;
@@ -256,44 +326,161 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* シンプルフェードイン */
-@keyframes heroFadeIn {
+/* ----------------------------------------
+   Keyframes - CTAボタン
+   ---------------------------------------- */
+@keyframes heroCtaReveal {
   0% {
     opacity: 0;
+    transform: translateY(var(--hero-distance-cta));
   }
   100% {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* アニメーションクラス */
+/* ----------------------------------------
+   Keyframes - スクロールインジケーター
+   ---------------------------------------- */
+@keyframes heroScrollReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+}
+
+/* ----------------------------------------
+   Keyframes - 文字単位アニメーション
+   ---------------------------------------- */
+@keyframes heroCharReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) rotateX(-40deg);
+  }
+  60% {
+    transform: translateY(-2px) rotateX(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+/* ----------------------------------------
+   Keyframes - ライン装飾
+   ---------------------------------------- */
+@keyframes heroLineExpand {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.3;
+  }
+}
+
+/* ========================================
+   Animation Classes
+   ======================================== */
+
+/* 背景全体 */
 .hero-animate-bg {
   opacity: 0;
-  animation: heroBgFade var(--hero-duration-slow) var(--hero-easing) forwards;
+  animation: heroBgFade var(--hero-duration-bg) var(--hero-easing) forwards;
+  animation-delay: var(--hero-delay-bg);
 }
 
+/* 背景オーブ */
+.hero-animate-orb {
+  opacity: 0;
+  animation: heroOrbReveal var(--hero-duration-bg) var(--hero-easing-soft) forwards;
+  animation-delay: var(--hero-delay-bg);
+}
+
+/* 装飾図形 */
 .hero-animate-shape {
   opacity: 0;
-  animation: heroShapeReveal var(--hero-duration-slow) var(--hero-easing) forwards;
+  animation: heroShapeReveal var(--hero-duration-shape) var(--hero-easing) forwards;
+  animation-delay: var(--hero-delay-shape);
 }
 
-.hero-animate-text {
+/* メインコピー */
+.hero-animate-main {
   opacity: 0;
-  animation: heroSlideUp var(--hero-duration) var(--hero-easing) forwards;
+  animation: heroMainReveal var(--hero-duration-main) var(--hero-easing) forwards;
+  animation-delay: var(--hero-delay-main);
 }
 
-.hero-animate-fade {
+/* サブコピー */
+.hero-animate-sub {
   opacity: 0;
-  animation: heroFadeIn var(--hero-duration) var(--hero-easing) forwards;
+  animation: heroSubReveal var(--hero-duration-sub) var(--hero-easing) forwards;
+  animation-delay: var(--hero-delay-sub);
 }
 
-/* 各要素の遅延時間（CSS変数でも上書き可能） */
-.hero-delay-0 { animation-delay: 0ms; }
-.hero-delay-1 { animation-delay: 200ms; }
-.hero-delay-2 { animation-delay: 400ms; }
-.hero-delay-3 { animation-delay: 600ms; }
-.hero-delay-4 { animation-delay: 800ms; }
-.hero-delay-5 { animation-delay: 1400ms; }
+/* CTAボタン */
+.hero-animate-cta {
+  opacity: 0;
+  animation: heroCtaReveal var(--hero-duration-cta) var(--hero-easing) forwards;
+  animation-delay: var(--hero-delay-cta);
+}
+
+/* スクロールインジケーター */
+.hero-animate-scroll {
+  opacity: 0;
+  animation: heroScrollReveal var(--hero-duration-scroll) var(--hero-easing-soft) forwards;
+  animation-delay: var(--hero-delay-scroll);
+}
+
+/* 文字単位アニメーション用 */
+.hero-char {
+  display: inline-block;
+  opacity: 0;
+  animation: heroCharReveal 600ms var(--hero-easing) forwards;
+}
+
+/* ライン装飾 */
+.hero-line {
+  transform-origin: left center;
+  opacity: 0;
+  animation: heroLineExpand 800ms var(--hero-easing) forwards;
+  animation-delay: 600ms;
+}
+
+/* ========================================
+   アニメーション無効時（初回以外 or reduced-motion）
+   ======================================== */
+.hero-no-animate,
+.hero-no-animate * {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* reduced-motion 対応 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-animate-bg,
+  .hero-animate-orb,
+  .hero-animate-shape,
+  .hero-animate-main,
+  .hero-animate-sub,
+  .hero-animate-cta,
+  .hero-animate-scroll,
+  .hero-char,
+  .hero-line {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
 
 /* ===========================================
    Scroll Stagger Animation

@@ -8,6 +8,7 @@ import {
   Business,
   Events,
   Recruit,
+  AnimationDebug,
 } from "@/components";
 import content from "../../content/ja.json";
 
@@ -15,6 +16,7 @@ export default function Home() {
   return (
     <>
       <Header logo={content.header.logo} nav={content.header.nav} />
+      <AnimationDebug />
       <main>
         <Hero
           catchCopy={content.hero.catchCopy}
