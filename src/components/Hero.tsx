@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useHeroAnimation } from "@/hooks/useHeroAnimation";
-import { HERO_DELAY } from "@/constants/animation";
 
 type HeroProps = {
   catchCopy: string;
@@ -14,42 +13,10 @@ type HeroProps = {
   scrollText: string;
 };
 
-/**
- * 文字を1文字ずつ分割してアニメーション用のspanで包む
- */
-function AnimatedText({
-  text,
-  baseDelay,
-  charDelay = 30,
-  className = "",
-}: {
-  text: string;
-  baseDelay: number;
-  charDelay?: number;
-  className?: string;
-}) {
-  return (
-    <span className={className} aria-label={text}>
-      {text.split("").map((char, index) => (
-        <span
-          key={index}
-          className="hero-char"
-          style={{
-            animationDelay: `${baseDelay + index * charDelay}ms`,
-          }}
-          aria-hidden="true"
-        >
-          {char === " " ? "\u00A0" : char}
-        </span>
-      ))}
-    </span>
-  );
-}
-
 export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps) {
   const { shouldAnimate, isReady } = useHeroAnimation();
 
-  // SSR中は何も表示しない（チラつき防止）
+  // SSR中は背景のみ表示（チラつき防止）
   if (!isReady) {
     return (
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]">
@@ -58,12 +25,8 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
     );
   }
 
-  const animationClass = shouldAnimate ? "" : "hero-no-animate";
-
   return (
-    <section
-      className={`relative min-h-screen flex items-center justify-center overflow-hidden ${animationClass}`}
-    >
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Gradient Layer */}
       <div
         className={`absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] ${
@@ -77,19 +40,18 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
           className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-blue-500/30 to-purple-500/20 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-20"
           }`}
-          style={shouldAnimate ? { animationDelay: "0ms" } : undefined}
         />
         <div
           className={`absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-20"
           }`}
-          style={shouldAnimate ? { animationDelay: "200ms" } : undefined}
+          style={shouldAnimate ? { animationDelay: "100ms" } : undefined}
         />
         <div
           className={`absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-gradient-to-br from-indigo-500/15 to-violet-500/15 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-15"
           }`}
-          style={shouldAnimate ? { animationDelay: "400ms" } : undefined}
+          style={shouldAnimate ? { animationDelay: "200ms" } : undefined}
         />
       </div>
 
@@ -99,63 +61,32 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
           className={`absolute top-20 left-10 w-32 h-32 border border-white/10 ${
             shouldAnimate ? "hero-animate-shape" : "opacity-10 rotate-45"
           }`}
-          style={shouldAnimate ? { animationDelay: "100ms" } : undefined}
         />
         <div
           className={`absolute bottom-40 right-20 w-24 h-24 border border-white/10 ${
             shouldAnimate ? "hero-animate-shape" : "opacity-10 rotate-45"
           }`}
-          style={shouldAnimate ? { animationDelay: "200ms" } : undefined}
+          style={shouldAnimate ? { animationDelay: "100ms" } : undefined}
         />
         <div
           className={`absolute top-1/2 right-1/4 w-16 h-16 border border-white/5 ${
             shouldAnimate ? "hero-animate-shape" : "opacity-5 rotate-45"
           }`}
-          style={shouldAnimate ? { animationDelay: "300ms" } : undefined}
-        />
-        <div
-          className={`absolute bottom-1/4 left-1/3 w-20 h-20 border border-white/8 ${
-            shouldAnimate ? "hero-animate-shape" : "opacity-[0.08] rotate-45"
-          }`}
-          style={shouldAnimate ? { animationDelay: "150ms" } : undefined}
-        />
-      </div>
-
-      {/* Decorative Lines */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className={`absolute top-1/3 left-0 w-1/4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent ${
-            shouldAnimate ? "hero-line" : "opacity-20"
-          }`}
-          style={shouldAnimate ? { animationDelay: "800ms" } : undefined}
-        />
-        <div
-          className={`absolute bottom-1/3 right-0 w-1/3 h-px bg-gradient-to-l from-transparent via-white/15 to-transparent ${
-            shouldAnimate ? "hero-line" : "opacity-15"
-          }`}
-          style={
-            shouldAnimate
-              ? { animationDelay: "1000ms", transformOrigin: "right center" }
-              : undefined
-          }
+          style={shouldAnimate ? { animationDelay: "200ms" } : undefined}
         />
       </div>
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        {/* Main Catch Copy */}
-        <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white tracking-tight leading-none mb-8">
+        {/* Main Catch Copy - 要素単位でシンプルにフェード+スライド */}
+        <h1
+          className={`text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white tracking-tight leading-none mb-8 ${
+            shouldAnimate ? "hero-animate-main" : ""
+          }`}
+        >
           {catchCopy.split("\n").map((line, lineIndex) => (
-            <span key={lineIndex} className="block" style={{ perspective: "1000px" }}>
-              {shouldAnimate ? (
-                <AnimatedText
-                  text={line}
-                  baseDelay={HERO_DELAY.MAIN_COPY + lineIndex * 100}
-                  charDelay={35}
-                />
-              ) : (
-                line
-              )}
+            <span key={lineIndex} className="block">
+              {line}
             </span>
           ))}
         </h1>

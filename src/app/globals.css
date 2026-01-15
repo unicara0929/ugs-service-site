@@ -215,31 +215,31 @@ h1, h2, h3, h4, h5, h6 {
    =========================================== */
 
 :root {
-  /* Duration - 全体で約1.8秒 */
-  --hero-duration-bg: 1000ms;
+  /* Duration - 統一感のある600〜800ms */
+  --hero-duration-bg: 800ms;
   --hero-duration-shape: 800ms;
   --hero-duration-main: 700ms;
-  --hero-duration-sub: 600ms;
-  --hero-duration-cta: 500ms;
-  --hero-duration-scroll: 500ms;
+  --hero-duration-sub: 700ms;
+  --hero-duration-cta: 600ms;
+  --hero-duration-scroll: 600ms;
 
-  /* Delay - 表示順序: 背景→メイン→サブ→CTA→装飾→スクロール */
+  /* Delay - 0.2秒間隔で順番に出現、全体約2秒 */
   --hero-delay-bg: 0ms;
-  --hero-delay-main: 100ms;
+  --hero-delay-main: 200ms;
   --hero-delay-sub: 400ms;
-  --hero-delay-cta: 650ms;
-  --hero-delay-shape: 300ms;
-  --hero-delay-scroll: 1200ms;
+  --hero-delay-cta: 600ms;
+  --hero-delay-shape: 800ms;
+  --hero-delay-scroll: 1400ms;
 
-  /* Easing */
+  /* Easing - 上品な減速 */
   --hero-easing: cubic-bezier(0.22, 1, 0.36, 1);
   --hero-easing-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  /* Distance */
-  --hero-distance-main: 40px;
-  --hero-distance-sub: 30px;
-  --hero-distance-cta: 20px;
-  --hero-scale-shape: 0.9;
+  /* Distance - 小さめの移動で上品に（10-20px） */
+  --hero-distance-main: 20px;
+  --hero-distance-sub: 15px;
+  --hero-distance-cta: 12px;
+  --hero-scale-shape: 0.95;
 }
 
 /* ----------------------------------------
@@ -495,13 +495,13 @@ h1, h2, h3, h4, h5, h6 {
 
 :root {
   /* スクロールアニメーション基本設定 */
-  --scroll-duration: 600ms;
-  --scroll-distance: 30px;
-  --scroll-stagger: 80ms;
-  --scroll-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --scroll-duration: 700ms;
+  --scroll-distance: 20px;
+  --scroll-stagger: 120ms;
+  --scroll-easing: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* スライド系 */
-  --scroll-slide-distance: 60px;
+  --scroll-slide-distance: 40px;
 }
 
 /* ========================================
