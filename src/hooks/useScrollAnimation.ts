@@ -4,17 +4,18 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 /**
  * スクロールアニメーション設定
+ * 参照: GA Technologies 新卒採用サイト
  *
  * 調整ポイント:
- * - threshold: トリガー位置（0.4 = 画面の40%に入ったら発火）
- * - staggerDelay: 階段式の間隔（80ms = 0.08秒）
+ * - threshold: トリガー位置（0.15 = 要素が少し見えたら発火）
+ * - staggerDelay: 階段式の間隔（150ms = 0.15秒）
  * - once: 一度だけ発火するか
  */
 export const SCROLL_ANIMATION_CONFIG = {
-  /** トリガー位置（0〜1、0.4 = 画面の40%位置） */
-  threshold: 0.4,
+  /** トリガー位置（0〜1、0.15 = 要素が15%見えたら発火） */
+  threshold: 0.15,
   /** 階段式アニメーションの間隔（ms） */
-  staggerDelay: 80,
+  staggerDelay: 150,
   /** 一度だけ発火（false = 毎回発火） */
   once: true,
   /** reduced-motion を尊重 */

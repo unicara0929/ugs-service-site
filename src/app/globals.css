@@ -215,31 +215,45 @@ h1, h2, h3, h4, h5, h6 {
    =========================================== */
 
 :root {
-  /* Duration - 統一感のある600〜800ms */
-  --hero-duration-bg: 800ms;
-  --hero-duration-shape: 800ms;
-  --hero-duration-main: 700ms;
-  --hero-duration-sub: 700ms;
-  --hero-duration-cta: 600ms;
+  /*
+   * ファーストビューアニメーション設定
+   * 参照: GA Technologies 新卒採用サイト
+   *
+   * タイムライン:
+   *   0.0s - 背景フェードイン開始
+   *   0.3s - 見出し（ロゴ）出現開始
+   *   0.5s - サブコピー出現開始
+   *   0.7s - CTAボタン出現開始
+   *   1.0s - 装飾要素出現
+   *   2.0s - スクロールガイド出現
+   *   全体約2.5秒で収束
+   */
+
+  /* Duration - 参照サイト準拠（長めでゆったり） */
+  --hero-duration-bg: 1200ms;
+  --hero-duration-shape: 1000ms;
+  --hero-duration-main: 800ms;
+  --hero-duration-sub: 800ms;
+  --hero-duration-cta: 700ms;
   --hero-duration-scroll: 600ms;
 
-  /* Delay - 0.2秒間隔で順番に出現、全体約2秒 */
+  /* Delay - 順番に段階的に出現 */
   --hero-delay-bg: 0ms;
-  --hero-delay-main: 200ms;
-  --hero-delay-sub: 400ms;
-  --hero-delay-cta: 600ms;
-  --hero-delay-shape: 800ms;
-  --hero-delay-scroll: 1400ms;
+  --hero-delay-main: 300ms;
+  --hero-delay-sub: 500ms;
+  --hero-delay-cta: 700ms;
+  --hero-delay-shape: 1000ms;
+  --hero-delay-scroll: 2000ms;
 
-  /* Easing - 上品な減速 */
-  --hero-easing: cubic-bezier(0.22, 1, 0.36, 1);
-  --hero-easing-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Easing - expo.out に近いイージング */
+  --hero-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --hero-easing-soft: cubic-bezier(0.33, 1, 0.68, 1);
 
-  /* Distance - 小さめの移動で上品に（10-20px） */
-  --hero-distance-main: 20px;
-  --hero-distance-sub: 15px;
-  --hero-distance-cta: 12px;
-  --hero-scale-shape: 0.95;
+  /* Distance - 大きめの移動で演出感を出す */
+  --hero-distance-main: 60px;
+  --hero-distance-sub: 40px;
+  --hero-distance-cta: 30px;
+  --hero-scale-shape: 0.9;
 }
 
 /* ----------------------------------------
@@ -494,14 +508,24 @@ h1, h2, h3, h4, h5, h6 {
    =========================================== */
 
 :root {
-  /* スクロールアニメーション基本設定 */
-  --scroll-duration: 700ms;
-  --scroll-distance: 20px;
-  --scroll-stagger: 120ms;
-  --scroll-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  /*
+   * スクロールアニメーション設定
+   * 参照: GA Technologies 新卒採用サイト
+   *
+   * 階段式出現:
+   *   - 見出し → 本文 → ボタン/カード の順
+   *   - 各要素 0.15秒（150ms）間隔
+   *   - 全体で約1.5秒のタイムライン
+   */
+
+  /* 基本設定 */
+  --scroll-duration: 800ms;
+  --scroll-distance: 30px;
+  --scroll-stagger: 150ms;
+  --scroll-easing: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* スライド系 */
-  --scroll-slide-distance: 40px;
+  --scroll-slide-distance: 50px;
 }
 
 /* ========================================
