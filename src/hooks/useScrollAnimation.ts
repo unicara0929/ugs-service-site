@@ -4,48 +4,32 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 /**
  * スクロールアニメーション設定
- * 参照: GA Technologies 新卒採用サイト
- *
- * 調整ポイント:
- * - threshold: トリガー位置（0.15 = 要素が少し見えたら発火）
- * - staggerDelay: 階段式の間隔（150ms = 0.15秒）
- * - once: 一度だけ発火するか
+ * GA Technologies 新卒採用サイト準拠
  */
-export const SCROLL_ANIMATION_CONFIG = {
-  /** トリガー位置（0〜1、0.15 = 要素が15%見えたら発火） */
-  threshold: 0.15,
-  /** 階段式アニメーションの間隔（ms） */
-  staggerDelay: 150,
-  /** 一度だけ発火（false = 毎回発火） */
-  once: true,
-  /** reduced-motion を尊重 */
-  respectReducedMotion: true,
+export const SCROLL_CONFIG = {
+  threshold: 0.15, // 要素が15%見えたら発火
+  staggerDelay: 100, // 階段式の間隔（ms）
+  once: true, // 一度だけ発火
 } as const;
 
 /**
- * セクション全体のスクロールアニメーションフック
- *
- * @example
- * const { ref, isVisible } = useScrollAnimation();
- * return <section ref={ref} className={isVisible ? 'animate' : ''}>...</section>
+ * 基本のスクロール検出フック
  */
 export function useScrollAnimation<T extends HTMLElement = HTMLElement>(
-  options?: Partial<typeof SCROLL_ANIMATION_CONFIG>
+  options?: { threshold?: number; once?: boolean }
 ) {
   const ref = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const config = { ...SCROLL_ANIMATION_CONFIG, ...options };
+  const { threshold = SCROLL_CONFIG.threshold, once = SCROLL_CONFIG.once } = options || {};
 
   useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
     // reduced-motion チェック
-    if (config.respectReducedMotion) {
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-      if (prefersReducedMotion) {
-        setIsVisible(true);
-        return;
-      }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsVisible(true);
+      return;
     }
 
     const observer = new IntersectionObserver(
@@ -53,83 +37,160 @@ export function useScrollAnimation<T extends HTMLElement = HTMLElement>(
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible(true);
-            if (config.once) {
+            if (once) {
               observer.unobserve(entry.target);
             }
-          } else if (!config.once) {
+          } else if (!once) {
             setIsVisible(false);
           }
         });
       },
-      { threshold: config.threshold }
+      { threshold, rootMargin: "0px 0px -50px 0px" }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
+    observer.observe(element);
     return () => observer.disconnect();
-  }, [config.once, config.respectReducedMotion, config.threshold]);
+  }, [threshold, once]);
 
   return { ref, isVisible };
 }
 
 /**
- * 複数要素の階段式アニメーションフック
- *
- * @example
- * const { containerRef, getItemProps } = useStaggerAnimation();
- * return (
- *   <div ref={containerRef}>
- *     <div {...getItemProps(0)}>Item 1</div>
- *     <div {...getItemProps(1)}>Item 2</div>
- *   </div>
- * )
+ * 階段式アニメーション用フック
+ * 複数の子要素を順番にアニメーション
  */
 export function useStaggerAnimation<T extends HTMLElement = HTMLElement>(
-  options?: Partial<typeof SCROLL_ANIMATION_CONFIG>
+  options?: { threshold?: number; staggerDelay?: number }
 ) {
   const { ref: containerRef, isVisible } = useScrollAnimation<T>(options);
-  const config = { ...SCROLL_ANIMATION_CONFIG, ...options };
+  const { staggerDelay = SCROLL_CONFIG.staggerDelay } = options || {};
 
   const getItemProps = useCallback(
     (index: number) => ({
-      className: `scroll-animate-item ${isVisible ? "is-visible" : ""}`,
+      className: `stagger-item`,
       style: {
-        transitionDelay: isVisible ? `${index * config.staggerDelay}ms` : "0ms",
+        transitionDelay: isVisible ? `${index * staggerDelay}ms` : "0ms",
       } as React.CSSProperties,
     }),
-    [isVisible, config.staggerDelay]
-  );
-
-  const getItemClass = useCallback(
-    (index: number) =>
-      `scroll-animate-item ${isVisible ? "is-visible" : ""} stagger-index-${index}`,
-    [isVisible]
+    [isVisible, staggerDelay]
   );
 
   return {
     containerRef,
     isVisible,
     getItemProps,
-    getItemClass,
+    containerClass: `stagger-container ${isVisible ? "is-visible" : ""}`,
   };
 }
 
 /**
  * 個別要素のスクロールアニメーションフック
- *
- * @example
- * const { ref, className } = useScrollReveal('fade-up');
- * return <div ref={ref} className={className}>...</div>
  */
 export function useScrollReveal<T extends HTMLElement = HTMLElement>(
-  animationType: "fade-up" | "fade-in" | "slide-left" | "slide-right" | "scale" = "fade-up",
-  options?: Partial<typeof SCROLL_ANIMATION_CONFIG>
+  type: "reveal" | "slide-left" | "slide-right" | "scale" = "reveal",
+  options?: { threshold?: number }
 ) {
   const { ref, isVisible } = useScrollAnimation<T>(options);
 
-  const className = `scroll-${animationType} ${isVisible ? "is-visible" : ""}`;
+  const classMap = {
+    reveal: "scroll-reveal",
+    "slide-left": "scroll-slide-left",
+    "slide-right": "scroll-slide-right",
+    scale: "scroll-scale",
+  };
 
-  return { ref, isVisible, className };
+  return {
+    ref,
+    isVisible,
+    className: `${classMap[type]} ${isVisible ? "is-visible" : ""}`,
+  };
+}
+
+/**
+ * パララックス効果フック（軽量版）
+ */
+export function useParallax<T extends HTMLElement = HTMLElement>(speed: number = 0.5) {
+  const ref = useRef<T>(null);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    // reduced-motion チェック
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const handleScroll = () => {
+      const rect = element.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      if (rect.top < windowHeight && rect.bottom > 0) {
+        const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+        setOffset((scrollProgress - 0.5) * speed * 100);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [speed]);
+
+  return { ref, offset, style: { transform: `translateY(${offset}px)` } };
+}
+
+/**
+ * カウントアップアニメーションフック
+ */
+export function useCountUp(
+  targetValue: number,
+  options?: { duration?: number; delay?: number }
+) {
+  const [count, setCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  const { duration = 2000, delay = 0 } = options || {};
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || hasStarted) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setHasStarted(true);
+          observer.disconnect();
+
+          setTimeout(() => {
+            const startTime = performance.now();
+
+            const animate = (currentTime: number) => {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+
+              // easeOutCubic
+              const eased = 1 - Math.pow(1 - progress, 3);
+              setCount(Math.floor(targetValue * eased));
+
+              if (progress < 1) {
+                requestAnimationFrame(animate);
+              } else {
+                setCount(targetValue);
+              }
+            };
+
+            requestAnimationFrame(animate);
+          }, delay);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [targetValue, duration, delay, hasStarted]);
+
+  return { ref, count };
 }

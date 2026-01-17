@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { useScrollReveal } from "@/hooks/useScrollAnimation";
 
 type NavItem = {
   label: string;
@@ -21,6 +21,8 @@ type FooterProps = {
 };
 
 export default function Footer({ nav, social, copyright }: FooterProps) {
+  const { ref: footerRef, className: footerClass } = useScrollReveal<HTMLElement>("reveal");
+
   const getSocialIcon = (icon: string) => {
     switch (icon) {
       case "x":
@@ -47,61 +49,67 @@ export default function Footer({ nav, social, copyright }: FooterProps) {
   };
 
   return (
-    <footer className="bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Logo */}
-          <div>
-            <Image
-              src="/images/logo-white.svg"
-              alt="UGS"
-              width={100}
-              height={40}
-              className="h-8 w-auto mb-6"
-            />
-            <p className="text-sm text-gray-400 leading-relaxed">
-              テクノロジーで、<br />
-              社会の当たり前を変えていく。
-            </p>
-          </div>
+    <footer ref={footerRef} className={`bg-black text-white ${footerClass}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer */}
+        <div className="py-16 md:py-20">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
+            {/* Logo & Tagline */}
+            <div className="md:col-span-5">
+              <Link href="/" className="inline-block text-2xl md:text-3xl font-black tracking-tight mb-6">
+                UGS
+              </Link>
+              <p className="text-sm text-gray-400 leading-relaxed max-w-sm">
+                テクノロジーで、<br />
+                社会の当たり前を変えていく。
+              </p>
+            </div>
 
-          {/* Navigation */}
-          <div>
-            <h3 className="text-sm font-bold mb-6 tracking-wider">MENU</h3>
-            <nav className="flex flex-col gap-3">
-              {nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
+            {/* Navigation */}
+            <div className="md:col-span-4">
+              <h3 className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase mb-6">
+                MENU
+              </h3>
+              <nav className="flex flex-col gap-3">
+                {nav.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="text-sm text-gray-400 hover:text-white transition-colors duration-300 inline-flex items-center group"
+                  >
+                    <span className="w-0 group-hover:w-4 h-px bg-white mr-0 group-hover:mr-2 transition-all duration-300" />
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
 
-          {/* Social */}
-          <div>
-            <h3 className="text-sm font-bold mb-6 tracking-wider">SHARE</h3>
-            <div className="flex gap-4">
-              {social.map((item) => (
-                <Link
-                  key={item.icon}
-                  href={item.href}
-                  className="w-10 h-10 flex items-center justify-center border border-gray-700 rounded-full text-gray-400 hover:text-white hover:border-white transition-colors"
-                  aria-label={item.label}
-                >
-                  {getSocialIcon(item.icon)}
-                </Link>
-              ))}
+            {/* Social */}
+            <div className="md:col-span-3">
+              <h3 className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase mb-6">
+                SHARE
+              </h3>
+              <div className="flex gap-3">
+                {social.map((item) => (
+                  <Link
+                    key={item.icon}
+                    href={item.href}
+                    className="w-11 h-11 flex items-center justify-center border border-gray-700 rounded-full text-gray-400 hover:text-white hover:border-white hover:bg-white/5 transition-all duration-300"
+                    aria-label={item.label}
+                  >
+                    {getSocialIcon(item.icon)}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-gray-800">
-          <p className="text-center text-xs text-gray-500">{copyright}</p>
+        {/* Bottom Bar */}
+        <div className="py-6 border-t border-gray-800">
+          <p className="text-center text-xs text-gray-600">
+            {copyright}
+          </p>
         </div>
       </div>
     </footer>
