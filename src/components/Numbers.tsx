@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useScrollReveal, useStaggerAnimation } from "@/hooks/useScrollAnimation";
+import { useReveal, useStagger } from "@/hooks/useScrollAnimation";
 
 type NumberItem = {
   value: string;
@@ -68,46 +68,38 @@ function AnimatedNumber({ value, unit, delay = 0 }: { value: string; unit: strin
   }, [value, delay, hasStarted]);
 
   return (
-    <span ref={ref} className="tabular-nums">
+    <span ref={ref} className="number">
       {displayValue}
-      <span className="text-xl md:text-2xl lg:text-3xl ml-1 font-medium">{unit}</span>
+      <span className="number-unit">{unit}</span>
     </span>
   );
 }
 
 export default function Numbers({ label, title, items }: NumbersProps) {
-  const { ref: headerRef, className: headerClass } = useScrollReveal<HTMLDivElement>("reveal");
-  const { containerRef, containerClass } = useStaggerAnimation<HTMLDivElement>({ staggerDelay: 80 });
+  const { ref: headerRef, className: headerClass } = useReveal<HTMLDivElement>("up");
+  const { ref: gridRef, containerClass, itemClass } = useStagger<HTMLDivElement>();
 
   return (
-    <section className="py-24 md:py-32 lg:py-40 bg-gray-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section section--gray">
+      <div className="section-container">
         {/* Header */}
         <div ref={headerRef} className={`text-center mb-16 md:mb-20 ${headerClass}`}>
-          <span className="block text-xs md:text-sm font-bold tracking-[0.3em] text-gray-400 mb-4">
-            {label}
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black">
-            {title}
-          </h2>
+          <span className="section-label">{label}</span>
+          <h2 className="section-title">{title}</h2>
         </div>
 
         {/* Numbers Grid */}
-        <div ref={containerRef} className={`grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 ${containerClass}`}>
+        <div ref={gridRef} className={`grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 ${containerClass}`}>
           {items.map((item, index) => (
-            <div
-              key={index}
-              className="stagger-item group"
-              style={{ transitionDelay: `${index * 80}ms` }}
-            >
-              <div className="relative p-6 md:p-8 lg:p-10 bg-white rounded-xl shadow-sm card-hover text-center">
-                {/* Background Decoration */}
-                <div className="absolute top-0 right-0 w-16 h-16 md:w-20 md:h-20 opacity-5 group-hover:opacity-10 transition-opacity">
+            <div key={index} className={`${itemClass} group`}>
+              <div className="card relative p-6 md:p-8 lg:p-10 bg-white rounded-xl text-center">
+                {/* Corner Decoration */}
+                <div className="absolute top-0 right-0 w-16 h-16 opacity-5 group-hover:opacity-10 transition-opacity">
                   <div className="absolute inset-0 border-r-2 border-t-2 border-black rounded-tr-xl" />
                 </div>
 
                 {/* Number */}
-                <div className="text-4xl md:text-5xl lg:text-6xl font-black mb-3 tracking-tight">
+                <div className="mb-3">
                   <AnimatedNumber value={item.value} unit={item.unit} delay={index * 100} />
                 </div>
 
