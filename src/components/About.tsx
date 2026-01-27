@@ -26,12 +26,12 @@ export default function About({ label, title, description, points }: AboutProps)
           <div ref={videoRef} className={videoClass}>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-lg">
               <iframe
-                src="https://player.vimeo.com/video/1151510814?autoplay=0&loop=1&muted=1&background=0"
+                src="https://player.vimeo.com/video/1151510814?h=945bd7395e&badge=0&autopause=0&player_id=0&app_id=58479"
                 className="absolute inset-0 w-full h-full"
                 frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowFullScreen
-                title="About UGS"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="LP内会社紹介動画"
               />
             </div>
           </div>
