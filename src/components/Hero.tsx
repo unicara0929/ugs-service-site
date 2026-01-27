@@ -38,10 +38,7 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
       {/* Large Background Logo - Orange logo visible on white */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <div
-          className={`relative w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] ${
-            shouldAnimate ? "hero-animate-orb" : ""
-          }`}
-          style={{ opacity: 0.2 }}
+          className="relative w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] opacity-20"
         >
           <Image
             src="/images/ugs-logomark.png"
