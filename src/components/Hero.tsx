@@ -20,7 +20,7 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
   // SSR中は背景のみ表示（チラつき防止）
   if (!isReady) {
     return (
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#d96f14] via-[#e8841a] to-[#f5a623]">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-50 to-gray-100">
         <div className="opacity-0">Loading...</div>
       </section>
     );
@@ -28,46 +28,46 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Gradient Layer - Orange theme matching logo */}
+      {/* Background Gradient Layer - White theme to show orange logo */}
       <div
-        className={`absolute inset-0 bg-gradient-to-br from-[#d96f14] via-[#e8841a] to-[#f5a623] ${
+        className={`absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100 ${
           shouldAnimate ? "hero-animate-bg" : ""
         }`}
       />
 
-      {/* Large Background Logo */}
+      {/* Large Background Logo - Orange logo visible on white */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <div
           className={`relative w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] ${
             shouldAnimate ? "hero-animate-orb" : ""
           }`}
-          style={{ opacity: 0.15 }}
+          style={{ opacity: 0.2 }}
         >
           <Image
             src="/images/ugs-logomark.png"
             alt=""
             fill
-            className="object-contain brightness-0 invert"
+            className="object-contain"
             priority
           />
         </div>
       </div>
 
-      {/* Background Orbs (Glow Effect) - Orange theme */}
+      {/* Background Orbs (Glow Effect) - Soft orange accents */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-yellow-500/30 to-orange-500/20 rounded-full blur-3xl ${
+          className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-orange-200/30 to-amber-200/20 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-20"
           }`}
         />
         <div
-          className={`absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-br from-orange-400/20 to-red-500/20 rounded-full blur-3xl ${
+          className={`absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-br from-orange-100/20 to-yellow-100/20 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-20"
           }`}
           style={shouldAnimate ? { animationDelay: "100ms" } : undefined}
         />
         <div
-          className={`absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-gradient-to-br from-amber-500/15 to-orange-500/15 rounded-full blur-3xl ${
+          className={`absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-gradient-to-br from-amber-100/15 to-orange-100/15 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-15"
           }`}
           style={shouldAnimate ? { animationDelay: "200ms" } : undefined}
@@ -99,7 +99,7 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         {/* Main Catch Copy - 要素単位でシンプルにフェード+スライド */}
         <h1
-          className={`text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white tracking-tight leading-none mb-8 ${
+          className={`text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-gray-900 tracking-tight leading-none mb-8 ${
             shouldAnimate ? "hero-animate-main" : ""
           }`}
         >
@@ -112,7 +112,7 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
 
         {/* Sub Copy */}
         <p
-          className={`text-lg sm:text-xl md:text-2xl text-white/80 mb-12 tracking-wide ${
+          className={`text-lg sm:text-xl md:text-2xl text-gray-600 mb-12 tracking-wide ${
             shouldAnimate ? "hero-animate-sub" : ""
           }`}
         >
@@ -123,12 +123,12 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
         <div className={shouldAnimate ? "hero-animate-cta" : ""}>
           <Link
             href={cta.href}
-            className="group relative inline-block px-10 py-4 text-sm font-bold tracking-widest border-2 border-white text-white overflow-hidden transition-colors duration-300"
+            className="group relative inline-block px-10 py-4 text-sm font-bold tracking-widest border-2 border-orange-500 text-orange-500 overflow-hidden transition-colors duration-300"
           >
-            <span className="relative z-10 group-hover:text-[#1a1a2e] transition-colors duration-300">
+            <span className="relative z-10 group-hover:text-white transition-colors duration-300">
               {cta.label}
             </span>
-            <span className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out" />
+            <span className="absolute inset-0 bg-orange-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out" />
           </Link>
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
           shouldAnimate ? "hero-animate-scroll" : "opacity-60"
         }`}
       >
-        <div className="flex flex-col items-center gap-2 text-white/60 scroll-indicator">
+        <div className="flex flex-col items-center gap-2 text-gray-400 scroll-indicator">
           <span className="text-xs tracking-[0.3em]">{scrollText}</span>
           <svg
             className="w-5 h-5"
