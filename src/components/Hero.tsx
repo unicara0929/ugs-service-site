@@ -38,15 +38,16 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
       {/* Large Background Logo */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <div
-          className={`relative w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] opacity-10 ${
+          className={`relative w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] ${
             shouldAnimate ? "hero-animate-orb" : ""
           }`}
+          style={{ opacity: 0.15 }}
         >
           <Image
             src="/images/ugs-logomark.png"
             alt=""
             fill
-            className="object-contain"
+            className="object-contain brightness-0 invert"
             priority
           />
         </div>
