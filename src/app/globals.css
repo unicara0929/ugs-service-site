@@ -417,6 +417,24 @@ h1, h2, h3, h4, h5, h6 {
   animation-delay: var(--hero-delay-bg);
 }
 
+/* 背景ロゴ */
+.hero-animate-logo {
+  opacity: 0;
+  animation: heroLogoReveal var(--hero-duration-bg) var(--hero-easing-soft) forwards;
+  animation-delay: var(--hero-delay-bg);
+}
+
+@keyframes heroLogoReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+}
+
 /* 装飾図形 */
 .hero-animate-shape {
   opacity: 0;
