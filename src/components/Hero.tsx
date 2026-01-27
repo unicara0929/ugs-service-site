@@ -39,7 +39,7 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <div
           className={`relative w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] ${
-            shouldAnimate ? "hero-animate-logo" : "opacity-20"
+            shouldAnimate ? "hero-animate-logo" : "opacity-[0.35]"
           }`}
         >
           <Image
