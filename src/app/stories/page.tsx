@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import content from "@/../../content/ja.json";
+import content from "../../../content/ja.json";
 
 type Member = {
   id: string;
