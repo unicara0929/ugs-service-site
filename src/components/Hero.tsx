@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useHeroAnimation } from "@/hooks/useHeroAnimation";
 
 type HeroProps = {
@@ -19,7 +20,7 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
   // SSR中は背景のみ表示（チラつき防止）
   if (!isReady) {
     return (
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#d96f14] via-[#e8841a] to-[#f5a623]">
         <div className="opacity-0">Loading...</div>
       </section>
     );
@@ -27,28 +28,45 @@ export default function Hero({ catchCopy, subCopy, cta, scrollText }: HeroProps)
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Gradient Layer */}
+      {/* Background Gradient Layer - Orange theme matching logo */}
       <div
-        className={`absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] ${
+        className={`absolute inset-0 bg-gradient-to-br from-[#d96f14] via-[#e8841a] to-[#f5a623] ${
           shouldAnimate ? "hero-animate-bg" : ""
         }`}
       />
 
-      {/* Background Orbs (Glow Effect) */}
+      {/* Large Background Logo */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div
+          className={`relative w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] opacity-10 ${
+            shouldAnimate ? "hero-animate-orb" : ""
+          }`}
+        >
+          <Image
+            src="/images/ugs-logomark.png"
+            alt=""
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Background Orbs (Glow Effect) - Orange theme */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-blue-500/30 to-purple-500/20 rounded-full blur-3xl ${
+          className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-yellow-500/30 to-orange-500/20 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-20"
           }`}
         />
         <div
-          className={`absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl ${
+          className={`absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-br from-orange-400/20 to-red-500/20 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-20"
           }`}
           style={shouldAnimate ? { animationDelay: "100ms" } : undefined}
         />
         <div
-          className={`absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-gradient-to-br from-indigo-500/15 to-violet-500/15 rounded-full blur-3xl ${
+          className={`absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-gradient-to-br from-amber-500/15 to-orange-500/15 rounded-full blur-3xl ${
             shouldAnimate ? "hero-animate-orb" : "opacity-15"
           }`}
           style={shouldAnimate ? { animationDelay: "200ms" } : undefined}
