@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useStaggerAnimation, useScrollReveal } from "@/hooks/useScrollAnimation";
 
 type Point = {
@@ -17,20 +16,22 @@ type AboutProps = {
 
 export default function About({ label, title, description, points }: AboutProps) {
   const { containerRef, isVisible: isContentVisible } = useStaggerAnimation<HTMLDivElement>();
-  const { ref: imageRef, className: imageClass } = useScrollReveal<HTMLDivElement>("slide-left");
+  const { ref: videoRef, className: videoClass } = useScrollReveal<HTMLDivElement>("slide-left");
 
   return (
     <section id="about" className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Image */}
-          <div ref={imageRef} className={imageClass}>
-            <div className="relative aspect-[4/3] img-zoom rounded-lg overflow-hidden shadow-lg">
-              <Image
-                src="/images/about-visual.jpg"
-                alt="About UGS"
-                fill
-                className="object-cover"
+          {/* Left: Video */}
+          <div ref={videoRef} className={videoClass}>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-lg">
+              <iframe
+                src="https://player.vimeo.com/video/1151510814?autoplay=0&loop=1&muted=1&background=0"
+                className="absolute inset-0 w-full h-full"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+                title="About UGS"
               />
             </div>
           </div>
